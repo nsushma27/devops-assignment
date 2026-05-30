@@ -1,99 +1,85 @@
-# Challenges Faced and Resolutions
+# DevOps Assignment - Challenges and Resolutions
 
-## Challenge 1: AWS CLI Authentication
+## Challenge 1: Terraform Infrastructure Design
 
 ### Problem
 
-Initially, AWS CLI commands returned root account details instead of the intended IAM user.
+Designing the AWS infrastructure while ensuring proper network segregation between application and database resources.
 
 ### Resolution
 
-Verified AWS CLI configuration and ensured Terraform was configured with the correct IAM credentials.
+Implemented a VPC with separate public and private subnets. The application resources were designed to reside in the public subnet while the PostgreSQL RDS instance was placed in a private subnet to improve security and follow cloud architecture best practices.
 
 ---
 
-## Challenge 2: Terraform Installation
+## Challenge 2: Docker Environment Setup
 
 ### Problem
 
-Terraform executable was downloaded but was not recognized by the command prompt.
+Docker was initially not installed and configured on the local machine, preventing container image creation and testing.
 
 ### Resolution
 
-Added the Terraform installation directory to the Windows PATH environment variable and verified installation using:
-
-terraform version
+Installed Docker Desktop, verified the installation using the hello-world container, and successfully built and ran the application container locally.
 
 ---
 
-## Challenge 3: Terraform Directory Structure
+## Challenge 3: Application Enhancement
 
 ### Problem
 
-Terraform commands failed because they were executed from the wrong directory.
+The initial application was a basic Flask service and did not sufficiently demonstrate operational use cases relevant to a DevOps/SRE environment.
 
 ### Resolution
 
-Organized Terraform files into a dedicated terraform directory and ran commands from the correct location.
+Enhanced the application into an SRE Incident Management API with endpoints for incident tracking, health checks, and operational statistics.
 
 ---
 
-## Challenge 4: Docker Installation
+## Challenge 4: GitHub Actions Workflow Configuration
 
 ### Problem
 
-Docker commands were unavailable initially.
+The GitHub Actions workflow failed due to YAML syntax issues and incorrect file content placement.
 
 ### Resolution
 
-Installed Docker Desktop and verified successful installation using:
-
-docker --version
+Corrected YAML indentation, fixed workflow syntax errors, and ensured the CI/CD pipeline successfully performed Terraform validation, Python validation, and Docker image builds.
 
 ---
 
-## Challenge 5: Docker Build Failure
+## Challenge 5: Terraform Validation Failure
 
 ### Problem
 
-Docker build failed because the Dockerfile could not be located.
+Terraform validation failed because GitHub Actions workflow content was accidentally copied into the monitoring.tf file.
 
 ### Resolution
 
-Verified the application directory structure and executed docker build from the app directory.
+Restored the CloudWatch monitoring configuration in monitoring.tf and revalidated the Terraform configuration successfully.
 
 ---
 
-## Challenge 6: Container Name Conflict
+## Challenge 6: Monitoring Implementation
 
 ### Problem
 
-Docker reported that the container name was already in use.
+Defining monitoring resources that aligned with the project requirements while keeping the implementation lightweight.
 
 ### Resolution
 
-Verified existing containers using docker ps and reused the running container.
+Implemented CloudWatch Log Groups and dashboards to provide centralized logging and infrastructure/application monitoring capabilities.
 
 ---
 
-## Challenge 7: Git Configuration
+## Key Learnings
 
-### Problem
+- Importance of Infrastructure as Code validation.
+- Benefits of containerization for consistent deployments.
+- CI/CD pipeline troubleshooting and validation.
+- AWS networking and security best practices.
+- Monitoring and observability fundamentals using CloudWatch.
 
-Git commit failed because user identity was not configured.
+## Conclusion
 
-### Resolution
-
-Configured Git username and email using Git configuration commands.
-
----
-
-## Challenge 8: CI/CD Validation
-
-### Problem
-
-Needed to ensure the GitHub Actions workflow correctly validated the application.
-
-### Resolution
-
-Implemented a CI pipeline that validates Python syntax and builds the Docker image automatically on every push.
+The project successfully demonstrated infrastructure provisioning, deployment automation, monitoring, logging, and application containerization using industry-standard DevOps tools and practices.
