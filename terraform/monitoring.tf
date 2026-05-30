@@ -1,57 +1,62 @@
-name: DevOps Assignment CI/CD
+resource "aws_cloudwatch_log_group" "app_logs" {
+  name              = "/devops-assignment/application"
+  retention_in_days = 7
+}
 
-on:
-  push:
-    branches:
-      - main
-      - develop
+resource "aws_cloudwatch_dashboard" "infrastructure" {
 
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  dashboard_name = "infrastructure-dashboard"
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type   = "metric"
+        x      = 0
+        y      = 0
+        width  = 12
+        height = 6
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+        properties = {
+          metrics = [
+            ["AWS/EC2", "CPUUtilization"]
+          ]
 
-      - name: Install Dependencies
-        run: |
-          cd app
-          pip install -r requirements.txt
+          period = 300
+          stat   = "Average"
+          region = "us-east-1"
+          title  = "EC2 CPU Utilization"
+        }
+      }
+    ]
 
-      - name: Verify Python Syntax
-        run: |
-          python -m py_compile app/app.py
+  })
+}
 
-      - name: Build Docker Image
-        run: |
-          docker build -t devops-assignment-app ./app
+resource "aws_cloudwatch_dashboard" "application" {
 
-  deploy-staging:
-    if: github.ref == 'refs/heads/develop'
+  dashboard_name = "application-health-dashboard"
 
-    needs: build-and-test
+  dashboard_body = jsonencode({
+    widgets = [
+      {
+        type   = "metric"
+        x      = 0
+        y      = 0
+        width  = 12
+        height = 6
 
-    runs-on: ubuntu-latest
+        properties = {
+          metrics = [
+            ["AWS/ApplicationELB", "RequestCount"]
+          ]
 
-    steps:
-      - name: Deploy to Staging
-        run: |
-          echo "Deploying application to STAGING environment"
+          period = 300
+          stat   = "Sum"
+          region = "us-east-1"
+          title  = "Application Request Count"
+        }
+      }
+    ]
 
-  deploy-production:
-    if: github.ref == 'refs/heads/main'
-
-    needs: build-and-test
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Deploy to Production
-        run: |
-          echo "Deploying application to PRODUCTION environment"
+  })
+}
