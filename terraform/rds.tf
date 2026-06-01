@@ -23,7 +23,7 @@ resource "aws_db_instance" "postgres" {
   allocated_storage = 20
 
   username = "postgres"
-  password = "ChangeMe123!"
+  password = "****"
 
   publicly_accessible = false
 
